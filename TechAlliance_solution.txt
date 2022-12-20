@@ -1,0 +1,59 @@
+Regarding the solution i decided to use IntelliJ as the IDE as i am more trained in using that , also 
+to configure all the specific dependencies in the pom file.
+Regarding it i considered the specific Jbehave plugin, selenium and junit. I then also downloaded the
+Chrome WebDriver for the specific version available on my pc , version 108.0.5359.125.
+
+Then i defined the *.story file (similarly to the .feature file in Cucumber) considereing the 
+Given,When,Then format and i defined the 2 following scenarios (one positive and one negative in which
+the failure is expected --> tracked via assertion).
+
+Scenario: Search for keyword on Google homepage
+Given I am on the Google homepage
+When I search for the keyword "JBehave"
+Then the search results should include the string "What is JBehave?"
+
+Scenario: Search for different keyword on Google
+Given I am on the Google homepage
+When I search for the keyword "Cucumber"
+Then the search results should NOT include the string "What is JBehave?"
+
+Then i continued by creating the specific Class file (googleTest.java) containing the implementation
+and mapping with the specific steps defined in the *.story file.
+
+Within the class i defined the WebDriver and WebDriverWait as private and then decided to instantiate
+a new driver to each @Given method implemented (single in this case).
+
+Then within the openGoogleHomepage method i instantiate the drivers, open the specific URL
+wait for the appeareance of a specific pop up (acceptance of cookies handling) and then
+click it away by accepting it and finally maximize the window
+
+The specific button was identified by ID = L2AGLb
+The @When method is then identifying the search input field by NAME = "q" and through the sendkey
+command insert the specified searched string and giving the "ENTER" command.
+
+Then the @Then methods are splitted in 2 , as positive and negative assertion.
+Then verifySearchResults method is waiting to the appeareance of the first result in the search , 
+located by TAGNAME = "h3" , then it asserts that the text (via getText()) of the identified
+page element is equal to the expected String provided via the scenario (stripping of " is introduce).
+
+The verifySearchResultsNegative method is providing an assertion that the searched information
+does not contain an expedcted text (assertNotEquals).
+
+Both of those method are terminating the driver after execution.
+
+Finally i moved to the Runner class creation Gstory.java in which i extended the 
+JUnitStories class and provided the information on where to find the *.story file and its
+corresponding Step implementation.
+
+Execution is currently sequential.
+
+
+IMPROVEMENTS:
+
+- specify regex to be used to track the steps in the story file and the implementation
+- introduce data tables to handle more specific configuration with the same Given,When,Then format
+- introduce @Before , @After to set up and tear down the specific driver
+- introduce the specification to define a specific driver to different browsers to be used
+- improve logging
+- introduce tagging for specific scenario separation and execution
+- define additional scenarios to be executed
